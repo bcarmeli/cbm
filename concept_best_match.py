@@ -8,19 +8,19 @@ from scipy.optimize import linear_sum_assignment
 
 class ConceptBestMatch():
     def __init__(self, input_data, words_sos=False, words_eos=True, concepts_sos= False, concepts_eos = False):
+        self.msg_loc = 0
+        self.phrase_loc = 1
         self.words_sos = words_sos
         self.words_eos = words_eos
         self.concepts_sos = concepts_eos
         self.concepts_eos = concepts_sos
-        self.msg_loc = 0
-        self.phrase_loc = 1
         assert len(input_data) > 0, f'Got empty input data to evaluate'
         if isinstance(input_data[0], dict):
             self.input_data = [list(sample.values()) for sample in input_data]
         else:
             self.input_data = input_data
 
-
+    # Remove start_of_seq/end_of_seq if communication has such
     def adjust_sos_eos(self, seq, sos, eos):
         if sos:
             seq = seq[1:]
@@ -28,12 +28,6 @@ class ConceptBestMatch():
             seq = seq[:-1]
         assert len(seq) > 0, f'Seq becomes zero after sos/eos adjustment'
         return seq
-
-    def calc_best_match(self):
-        word2idx, cpt2idx, edges_counter = self.extract_data(self.input_data)
-        row_indices, col_indices, cost_matrix = self.calc_match(word2idx, cpt2idx, edges_counter)
-        results = self.report_results(self.input_data, word2idx, cpt2idx, row_indices, col_indices, cost_matrix)
-        return results
 
     def extract_data(self, input_data):
         word2idx = []
@@ -44,7 +38,7 @@ class ConceptBestMatch():
             phrase = sample[self.phrase_loc]
             words = message.split(".")
             concepts = phrase.split(".")
-            # We add multiple (word*concept) edges - each for each (word-concept) pairs
+            # We add multiple (word*concept) edges - each for each (word-concept) pair
             # We count the edges again after having the best_match assignment
             for word in self.adjust_sos_eos(words, self.words_sos, self.words_eos):
                  for concept in self.adjust_sos_eos(concepts, self.concepts_sos, self.concepts_eos):
@@ -67,7 +61,7 @@ class ConceptBestMatch():
                     # We are adding negative values as optimization is done on the cost (lower is better)
                     cost_matrix[i, j] = -counter[word][concept]
 
-        # Use the Hungarian algorithm to find the best match
+        # Use linear sum assignment to find the best match
         row_indices, col_indices = linear_sum_assignment(cost_matrix)
         return row_indices, col_indices, cost_matrix
 
@@ -142,6 +136,11 @@ class ConceptBestMatch():
                    }
         return results
 
+    def calc_best_match(self):
+        word2idx, cpt2idx, edges_counter = self.extract_data(self.input_data)
+        row_indices, col_indices, cost_matrix = self.calc_match(word2idx, cpt2idx, edges_counter)
+        results = self.report_results(self.input_data, word2idx, cpt2idx, row_indices, col_indices, cost_matrix)
+        return results
 
 if __name__ == '__main__':
 
