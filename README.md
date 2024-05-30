@@ -3,7 +3,7 @@
 This repository contains the implementation of the Concept Best Matching (CBM) algorithm.
 
 The CBM algorithm is utilized for evaluating compositionality in emergent communication and was introduced in the following paper:  
-**[Concept Best Matching](https://arxiv.org/abs/2403.14705)**
+**[Concept-Best-Matching: Evaluating Compositionality in Emergent Communication](https://arxiv.org/abs/2403.14705)**
 
 ### Citation
 
