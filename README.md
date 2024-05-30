@@ -1,11 +1,15 @@
-# Concept best matching
-This repository implements the concept best matching algorithm
-The CBM is used for evaluating emergent communication.
-It was introduced in the paper:
-Concept best matching
-https://arxiv.org/abs/2403.14705
+# Concept Best Matching
 
-To cite:
+This repository contains the implementation of the Concept Best Matching (CBM) algorithm.
+
+The CBM algorithm is utilized for evaluating compositionality in emergent communication and was introduced in the following paper:  
+**[Concept Best Matching](https://arxiv.org/abs/2403.14705)**
+
+### Citation
+
+If you use this algorithm in your research, please cite the following paper:
+
+```bibtex
 @article{carmeli2024concept,
   title={Concept-Best-Matching: Evaluating Compositionality in Emergent Communication},
   author={Carmeli, Boaz and Belinkov, Yonatan and Meir, Ron},
